@@ -1,4 +1,5 @@
 # Загружает настройки игры, а затем запускает её
+import time
 async def start_game_services():
     from base.core import components
 
@@ -72,12 +73,26 @@ if __name__ == "__main__":
 
     # Импортируем все библиотеки, чтобы проверить их наличие. В случае ошибки игра закроется
     try:
-        import colorama
-        import playsound3
         import keyboard
     except ImportError:
-        print("[E] Отсутствуют необходимые библиотеки. Обратитесь к документации, чтобы исправить это.")
-        exit(1)
+        print("[E] Отсутствуют библиотека keyboard.")
+        if sys.platform.startswith("win"):
+        	exit(1)
+    try:
+    	import colorama
+    except:
+    	print("[E] Отсутствуют библиотека colorama.")
+    	print("Для улучшения игрового опыта советуются установить модуль colorama.")
+    	import base.core.fcolorama as colorama
+    	sys.modules['colorama'] = colorama
+    try:
+    	import playsound3
+    except:
+    	import base.core.pl3 as pl3
+    	sys.modules['playsound3'] = pl3
+    	print("[E] Отсутствуют библиотека playsound3.")
+    	print("Для улучшения игрового опыта советуются установить модуль playsound3.")
+    time.sleep(2)
     # Инициализация colorama
     colorama.init(autoreset=True)
     import asyncio

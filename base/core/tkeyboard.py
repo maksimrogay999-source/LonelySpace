@@ -8,12 +8,7 @@ import tty
 from collections import defaultdict
 
 # Используем select для неблокирующего чтения в Unix-подобных системах
-try:
-    import select
-except ImportError:
-    # Ошибка: select не найден (например, в некоторых средах Windows), 
-    # но поскольку мы используем termios, среда должна быть Unix-подобной.
-    pass
+import select
 
 # --- ВНУТРЕННИЕ ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ СОСТОЯНИЯ ---
 _HOTKEYS = defaultdict(list)
@@ -24,7 +19,7 @@ _ORIGINAL_TERMINAL_SETTINGS = None
 _LOCK = threading.Lock()
 
 
-# --- Внутренние Функции Управления Терминалом ---
+# Внутренние Функции Управления Терминалом
 
 def _set_cbreak_mode():
     """Устанавливает терминал в cbreak режим для Hotkeys."""
@@ -45,10 +40,6 @@ def _restore_terminal_mode():
 
 
 def _get_single_char():
-    """
-    Считывает один символ, используя select для неблокирующего чтения. 
-    Возвращает "", если символ не был нажат.
-    """
     try:
         # Таймаут 0.001с (или меньше) позволяет потоку быстро завершиться
         ready, _, _ = select.select([_FD], [], [], 0.001)
